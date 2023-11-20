@@ -2,17 +2,26 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { registerUser } from '../utils/auth'; // Update with path to registerUser
+import { useRouter } from 'next/router';
+import { registerUser } from '../utils/auth';
 
-function RegisterForm({ user, updateUser }) {
+function RegisterForm({ user, onUpdate }) {
   const [formData, setFormData] = useState({
     bio: '',
     uid: user.uid,
   });
 
-  const handleSubmit = (e) => {
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    registerUser(formData).then(() => updateUser(user.uid));
+    const payload = {
+      ...formData, UID: user.uid, ProfileImageURL: user.fbUser.photoURL, CreatedOn: new Date(Date.now()), Active: true,
+    };
+    console.warn('my payload', payload);
+    await registerUser(payload);
+    onUpdate();
+    router.push('/');
   };
 
   return (
@@ -32,8 +41,11 @@ function RegisterForm({ user, updateUser }) {
 RegisterForm.propTypes = {
   user: PropTypes.shape({
     uid: PropTypes.string.isRequired,
+    fbUser: PropTypes.shape({
+      photoURL: PropTypes.string.isRequired,
+    }).isRequired,
   }).isRequired,
-  updateUser: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
 };
 
 export default RegisterForm;
