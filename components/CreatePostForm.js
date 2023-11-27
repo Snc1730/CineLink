@@ -71,12 +71,12 @@ const CreatePostForm = ({ obj }) => {
         if (postId) {
           await associateGenreWithPost(postId, genreId);
         }
-        setPostGenres([...postGenres, genreId]);
+        setPostGenres((prevGenres) => [...prevGenres, { id: genreId }]);
       } else {
         if (postId) {
           await dissociateGenreFromPost(postId, genreId);
         }
-        setPostGenres(postGenres.filter((id) => id !== genreId));
+        setPostGenres((prevGenres) => prevGenres.filter((item) => item.id !== genreId));
       }
     } catch (error) {
       console.error('Error handling genre checkbox change:', error);
@@ -128,7 +128,7 @@ const CreatePostForm = ({ obj }) => {
   };
 
   const renderGenreCheckboxes = () => allGenres.map((genre) => {
-    const checked = postGenres.includes(genre.id);
+    const checked = postGenres ? postGenres.some((item) => item.id === genre.id) : false;
 
     return (
       <Form.Check
