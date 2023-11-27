@@ -48,7 +48,7 @@ const dissociateGenreFromPost = async (postId, genreId) => {
 
 const getGenresForPost = async (postId) => {
   try {
-    const response = await fetch(`/api/posts/${postId}/postgenres`, {
+    const response = await fetch(`${dbUrl}/api/posts/${postId}/postgenres`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
