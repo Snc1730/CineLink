@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 const PostCard = ({
-  post, onDelete, onRemove, initialUserId,
+  post, onDelete, onRemove, initialUserId, isWatchlistPage,
 }) => {
   const [userId, setUserId] = useState(initialUserId);
   useEffect(() => {
@@ -44,15 +44,21 @@ const PostCard = ({
       <Link href={`/post-details/${post.id}`} passHref>
         <button type="button">View Details</button>
       </Link>
-      <Link href={`/edit-post/${post.id}`} passHref>
-        <button type="button">Edit Post</button>
-      </Link>
-      <button type="button" onClick={handleDelete}>
-        Delete Post
-      </button>
-      <button type="button" onClick={handleRemoveFromWatchlist}>
-        Remove from Watchlist
-      </button>
+      {userId === post.userId && ( // Check if the logged-in user is the creator of the post
+        <>
+          <Link href={`/edit-post/${post.id}`} passHref>
+            <button type="button">Edit Post</button>
+          </Link>
+          <button type="button" onClick={handleDelete}>
+            Delete Post
+          </button>
+        </>
+      )}
+      {isWatchlistPage && (
+        <button type="button" onClick={handleRemoveFromWatchlist}>
+          Remove from Watchlist
+        </button>
+      )}
     </div>
   );
 };
@@ -61,10 +67,12 @@ PostCard.propTypes = {
   post: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
   onRemove: PropTypes.func,
   initialUserId: PropTypes.number,
+  isWatchlistPage: PropTypes.bool.isRequired,
 };
 
 PostCard.defaultProps = {
