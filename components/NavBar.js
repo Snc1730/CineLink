@@ -26,6 +26,9 @@ export default function NavBar() {
             <Link passHref href="/CreatePostPage">
               <Nav.Link>Create Post</Nav.Link>
             </Link>
+            <Link passHref href="/watchlist">
+              <Nav.Link>Watchlist</Nav.Link>
+            </Link>
             <Button variant="danger" onClick={signOut}>
               Sign Out
             </Button>
