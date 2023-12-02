@@ -1,93 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { createReview, updateReview } from '../api/ReviewEndpoints';
 import { useAuth } from '../utils/context/authContext';
 import { checkUser } from '../utils/auth';
 
-const ReviewForm = ({ postId, reviewDataToEdit }) => {
+const ReviewForm = ({ initialReview, onSubmit, postid }) => {
   const { user } = useAuth();
-  const [reviewContent, setReviewContent] = useState('');
-  const [selectedRating, setSelectedRating] = useState(1); // Assuming default rating is 1
-  const [loggedInUserId, setLoggedInUserId] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [myUser, setMyUser] = useState();
+  const [reviewData, setReviewData] = useState(initialReview || { content: '', rating: 1 });
 
-  useEffect(() => {
-    if (user) {
-      checkUser(user.uid).then((data) => {
-        if (data.length > 0) {
-          setLoggedInUserId(data[0].id);
-        }
-      });
-    }
-
-    if (reviewDataToEdit && Object.keys(reviewDataToEdit).length > 0) {
-      setIsEditing(true);
-      setReviewContent(reviewDataToEdit.content);
-      setSelectedRating(reviewDataToEdit.rating);
-    }
-  }, [user, reviewDataToEdit]);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      const reviewData = {
-        postId,
-        userId: loggedInUserId,
-        content: reviewContent,
-        rating: selectedRating,
-        datePosted: new Date().toISOString(),
-      };
-
-      if (isEditing) {
-        await updateReview(reviewDataToEdit.id, reviewData);
-        // Handle actions after updating the review
-      } else {
-        await createReview(reviewData);
-        // Handle actions after creating the review
-      }
-
-      console.log('Review submitted successfully!');
-    } catch (error) {
-      console.error('Error submitting review:', error);
-    }
+  const onUpdate = () => {
+    checkUser(user.uid).then((data) => setMyUser(data[0]));
   };
 
-  const handleRatingChange = (event) => {
-    setSelectedRating(parseInt(event.target.value, 10));
+  useEffect(() => {
+    onUpdate();
+  }, [user.uid]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setReviewData({ ...reviewData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const payload = {
+      ...reviewData,
+      userId: myUser.id, // Include userId in the payload
+      postId: postid, // Include postId in the payload
+    };
+    onSubmit(payload);
+    setReviewData({ content: '', rating: 1 }); // Reset the form data after submission
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <textarea
-        value={reviewContent}
-        onChange={(e) => setReviewContent(e.target.value)}
-        placeholder="Enter your review"
+        name="content"
+        placeholder="Add a comment"
+        value={reviewData.content}
+        onChange={handleChange}
       />
-      <input
-        type="number"
-        value={selectedRating}
-        onChange={handleRatingChange}
-        min={1}
-        max={5}
-      />
-      <button type="submit">{isEditing ? 'Update Review' : 'Submit Review'}</button>
+      <label htmlFor="rating">Rating:</label>
+      <select
+        id="rating"
+        name="rating"
+        value={reviewData.rating}
+        onChange={handleChange}
+      >
+        {[1, 2, 3, 4, 5].map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      <button type="submit">Submit</button>
     </form>
   );
 };
 
 ReviewForm.propTypes = {
-  postId: PropTypes.number.isRequired,
-  reviewDataToEdit: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    content: PropTypes.string.isRequired,
-    rating: PropTypes.number.isRequired,
-    // Add other required properties for reviewDataToEdit if any
+  initialReview: PropTypes.shape({
+    content: PropTypes.string,
+    rating: PropTypes.number,
   }),
+  onSubmit: PropTypes.func.isRequired,
+  postid: PropTypes.string.isRequired,
 };
 
 ReviewForm.defaultProps = {
-  reviewDataToEdit: null,
+  initialReview: { content: '', rating: 1 },
 };
 
 export default ReviewForm;

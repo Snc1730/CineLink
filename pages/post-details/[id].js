@@ -1,20 +1,35 @@
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import PostDetails from '../../components/PostDetails';
+import { getPostById } from '../../api/PostEndpoints';
+import CreatePostForm from '../../components/CreatePostForm';
 
-const PostDetailsPage = () => {
+const EditPostPage = () => {
+  const [postData, setPostData] = useState(null);
   const router = useRouter();
   const { id } = router.query;
 
-  if (!id) {
-    return <div>Loading...</div>; // Or any loading indicator while postId is undefined
-  }
+  useEffect(() => {
+    const fetchPostData = async () => {
+      if (id) {
+        try {
+          const post = await getPostById(id); // Fetch post data by ID from your API
+          console.log('Fetched post data:', post);
+          setPostData(post);
+        } catch (error) {
+          console.error('Error fetching post data:', error);
+        }
+      }
+    };
+
+    fetchPostData();
+  }, [id]);
 
   return (
     <div>
-      <h1>Post Details Page</h1>
-      <PostDetails postId={parseInt(id, 10)} /> {/* Pass postId to PostDetails component */}
+      <h2>Edit Post</h2>
+      <CreatePostForm obj={postData} /> {/* Pass fetched post data to the form */}
     </div>
   );
 };
 
-export default PostDetailsPage;
+export default EditPostPage;
