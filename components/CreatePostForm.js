@@ -108,9 +108,11 @@ const CreatePostForm = ({ obj }) => {
 
         const createdPost = await createPost(newPostData);
 
+        console.log('Created post:', createdPost);
+
         const postId = createdPost.id;
         const selectedGenresToAssociate = allGenres
-          .filter((genre) => postGenres.includes(genre.id))
+          .filter((genre) => postGenres.some((item) => item.id === genre.id))
           .map((genre) => genre.id);
 
         const associationPromises = selectedGenresToAssociate.map(
@@ -120,7 +122,7 @@ const CreatePostForm = ({ obj }) => {
         );
         await Promise.all(associationPromises);
 
-        console.log('Created post:', createdPost);
+        console.log('Genres associated with the post.');
       }
     } catch (error) {
       console.error('Error creating/updating post:', error.message);
