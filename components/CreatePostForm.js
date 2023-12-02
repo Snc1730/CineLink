@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 import { createPost, updatePost } from '../api/PostEndpoints';
 import { useAuth } from '../utils/context/authContext';
 import { checkUser } from '../utils/auth';
@@ -9,6 +10,7 @@ import { getAllGenres } from '../api/GenreEndpoints';
 import { associateGenreWithPost, dissociateGenreFromPost, getGenresForPost } from '../api/JoinTableEndpoints';
 
 const CreatePostForm = ({ obj }) => {
+  const router = useRouter();
   const { user } = useAuth();
   const [myUser, setMyUser] = useState();
   const [title, setTitle] = useState('');
@@ -100,6 +102,7 @@ const CreatePostForm = ({ obj }) => {
         const updatedPostData = { ...postData };
         await updatePost(obj.id, updatedPostData);
         console.log('Updated post:', updatedPostData);
+        router.push('/');
       } else {
         const newPostData = {
           ...postData,
@@ -123,6 +126,7 @@ const CreatePostForm = ({ obj }) => {
         await Promise.all(associationPromises);
 
         console.log('Genres associated with the post.');
+        router.push('/');
       }
     } catch (error) {
       console.error('Error creating/updating post:', error.message);

@@ -43,7 +43,7 @@ const WatchlistPage = () => {
       ) : (
         <div className="d-flex flex-wrap justify-content-center">
           {watchlist.map((post) => (
-            <PostCard key={post.id} post={post} onDelete={deletePost} onRemove={removeFromWatchlist} initialUserId={userId} />
+            <PostCard key={post.id} post={post} onDelete={deletePost} onRemove={removeFromWatchlist} initialUserId={userId} isWatchlistPage />
             // Assuming 'post' contains the necessary details to render in the PostCard
           ))}
         </div>

@@ -2,10 +2,22 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../utils/context/authContext';
 import { deletePost, getAllPost } from '../api/PostEndpoints';
 import PostCard from '../components/PostCard';
+import { checkUser } from '../utils/auth';
 
 function Home() {
   const { user } = useAuth();
+  const [myUser, setMyUser] = useState();
   const [posts, setPosts] = useState([]);
+
+  const onUpdate = () => {
+    checkUser(user.uid).then((data) => setMyUser(data[0]));
+  };
+
+  useEffect(() => {
+    onUpdate();
+  }, [user.uid]);
+
+  const userId = myUser?.id;
 
   // Fetch all posts when the component mounts
   useEffect(() => {
@@ -28,7 +40,7 @@ function Home() {
       </div>
       <div className="d-flex flex-wrap justify-content-center">
         {posts.map((post) => (
-          <PostCard key={post.id} post={post} onDelete={deletePost} />
+          <PostCard key={post.id} post={post} onDelete={deletePost} initialUserId={userId} isWatchlistPage={false} />
         ))}
       </div>
     </div>
