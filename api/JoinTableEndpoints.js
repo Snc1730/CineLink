@@ -69,8 +69,81 @@ const getGenresForPost = async (postId) => {
   }
 };
 
+const addToWatchlist = async (userId, postId) => {
+  try {
+    const response = await fetch(`${dbUrl}/api/Watchlist?userId=${userId}&postId=${postId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId, postId }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error adding post to watchlist');
+    }
+
+    const data = await response.json();
+
+    console.log('Post added to watchlist successfully.');
+
+    return data;
+  } catch (error) {
+    throw new Error(`Error adding post to watchlist: ${error.message}`);
+  }
+};
+
+const removeFromWatchlist = async (userId, postId) => {
+  try {
+    const response = await fetch(`${dbUrl}/api/Watchlist?userId=${userId}&postId=${postId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error removing post from watchlist');
+    }
+
+    const data = await response.json();
+
+    console.log('Post removed from watchlist successfully.');
+
+    return data;
+  } catch (error) {
+    throw new Error(`Error removing post from watchlist: ${error.message}`);
+  }
+};
+
+const getWatchlistForUser = async (userId) => {
+  try {
+    const response = await fetch(`${dbUrl}/api/UserWatchlist/${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error fetching user watchlist');
+    }
+
+    const data = await response.json();
+
+    console.log('User watchlist fetched successfully.');
+
+    return data;
+  } catch (error) {
+    throw new Error(`Error fetching user watchlist: ${error.message}`);
+  }
+};
+
 export {
   associateGenreWithPost,
   dissociateGenreFromPost,
   getGenresForPost,
+  addToWatchlist,
+  removeFromWatchlist,
+  getWatchlistForUser,
 };
