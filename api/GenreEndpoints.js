@@ -38,6 +38,26 @@ const getGenreById = async (id) => {
   }
 };
 
+const getMoviesByGenre = async (genreId) => {
+  try {
+    const response = await fetch(`https://localhost:7273/api/movies/genres/${genreId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error fetching movies by genre');
+    }
+
+    const movies = await response.json();
+    return movies;
+  } catch (error) {
+    throw new Error(`Error fetching movies by genre: ${error.message}`);
+  }
+};
+
 const createGenre = async (genreData) => {
   try {
     const modifiedGenreData = {
@@ -126,6 +146,7 @@ export {
   createGenre,
   getAllGenres,
   getGenreById,
+  getMoviesByGenre,
   getPostGenres,
   updateGenre,
   deleteGenre,
