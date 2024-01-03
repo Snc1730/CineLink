@@ -40,7 +40,7 @@ const PostCard = ({
 
   return (
     <div className="post-card">
-      <h3>Post Title: {post.title}</h3>
+      <h3>{post.title}</h3>
       <Link href={`/post-details/${post.id}`} passHref>
         <button type="button">View Details</button>
       </Link>
