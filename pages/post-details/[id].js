@@ -119,69 +119,88 @@ const PostDetailsPage = () => {
   };
 
   return (
-    <div>
-      {/* Display post details */}
-      <h1>Title: {postDetails.title}</h1>
-      <p>Description: {postDetails.description}</p>
-      <p>Length: {postDetails.length}</p>
-      {/* Display genres */}
-      <div>
-        <h2>Genres</h2>
-        <ul>
-          {postGenres.map((genre) => (
-            <li key={genre.id}>{genre.name}</li>
-          ))}
-        </ul>
+    <div className="custom-width-container" style={{ paddingTop: '10px', paddingBottom: '10px', display: 'flex' }}>
+      {/* Left Column */}
+      <div style={{
+        flex: '1', paddingRight: '20px', position: 'sticky', top: '0', height: '100vh', overflow: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center',
+      }}
+      >
+        {/* Display post details */}
+        <h1>Title: {postDetails.title}</h1>
+        {postDetails.imageUrl && (
+          <img
+            src={postDetails.imageUrl}
+            alt={postDetails.title}
+            style={{ maxWidth: '500px', height: 'auto' }}
+          />
+        )}
+
+        {/* Add to Watchlist Button */}
+        <button type="button" onClick={handleAddToWatchlist} className="button">
+          Add to Watchlist
+        </button>
+
+        {/* Confirmation message */}
+        {showConfirmation && (
+          <div className="confirmation">
+            <p>Post added to watchlist successfully!</p>
+          </div>
+        )}
       </div>
 
-      {/* Add to Watchlist Button */}
-      <button type="button" onClick={handleAddToWatchlist}>
-        Add to Watchlist
-      </button>
+      {/* Right Column */}
+      <div style={{ flex: '1', overflow: 'auto' }}>
+        {/* Description */}
+        <h3 style={{ marginTop: '150px' }}>{postDetails.description}</h3>
+        <p>Length: {postDetails.length}</p>
 
-      {/* Confirmation message */}
-      {showConfirmation && (
-        <div className="confirmation">
-          <p>Post added to watchlist successfully!</p>
+        {/* Display genres */}
+        <div>
+          <h2>Genres</h2>
+          <ul>
+            {postGenres.map((genre) => (
+              <li key={genre.id}>{genre.name}</li>
+            ))}
+          </ul>
         </div>
-      )}
 
-      {/* Display reviews */}
-      {reviews.map((review) => (
-        <div key={review.id}>
-          <p>{review.content}</p>
-          <p>{review.rating}</p>
-          {myUser?.id === review.userId && (
-            <>
-              <button
-                type="button"
-                onClick={() => setEditingReviewId(review.id)}
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDeleteReview(review.id)}
-              >
-                Delete
-              </button>
-            </>
-          )}
-          {editingReviewId === review.id && (
-            <ReviewForm
-              postid={id}
-              initialReview={review}
-              onSubmit={(data) => handleUpdateReview(review.id, data)}
-            />
-          )}
-        </div>
-      ))}
+        {/* ReviewForm for creating new review */}
+        <ReviewForm
+          postid={id}
+          onSubmit={handleCreateReview}
+        />
 
-      {/* ReviewForm for creating new review */}
-      <ReviewForm
-        postid={id}
-        onSubmit={handleCreateReview}
-      />
+        {/* Reviews Section */}
+        {reviews.slice(0).reverse().map((review) => (
+          <div key={review.id}>
+            <p>{review.content}</p>
+            <p>{review.rating}</p>
+            {myUser?.id === review.userId && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setEditingReviewId(review.id)}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteReview(review.id)}
+                >
+                  Delete
+                </button>
+              </>
+            )}
+            {editingReviewId === review.id && (
+              <ReviewForm
+                postid={id}
+                initialReview={review}
+                onSubmit={(data) => handleUpdateReview(review.id, data)}
+              />
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

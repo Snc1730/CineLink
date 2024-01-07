@@ -19,17 +19,65 @@ a {
 
 body {
   background-color: #88effd;
+  background: linear-gradient(to bottom, #000000,#1a2a38, #000000);
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center bottom;
+  font-family: Arial, sans-serif;
+  color: #8098c0;
+}
+
+.custom-width-container {
+  max-width: 1800px; 
 }
 
 .post-card {
-  border: 2px solid #333; 
-  padding: 20px;
+  border: 2px solid #000; 
+  border-radius: 15px;
+  padding: 5px;
   margin-bottom: 20px;
-  background-color: #444; 
-  color: white; 
+  margin-right: 30px;
+  background-color: #111; 
+  height: 450px;
+  width: 250px;
+  font-family: 'Arial';
+  color: #8098c0;
+  font-weight: bold;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-card button {
+  font-family: 'Arial';
+  font-size: 14px;
+  color: #8098c0;
+  font-weight: bold;
+  background-color: #333;
+  margin-right: 5px;
+  margin-bottom: 5px; 
+  border-radius: 5px;
+  padding: 1px 5px;
+}
+
+
+.post-card-img {
+  max-width: 200px;
+  height: auto; 
+  display: block; 
+  margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .card-content {
   display: flex;
   flex-direction: column;
+}
+
+.navbar-brand,
+.nav-link,
+.button {
+  font-family: 'Arial'; 
+  color: #8098c0; 
+  font-weight: bold;
 }
