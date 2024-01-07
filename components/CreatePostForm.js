@@ -192,7 +192,12 @@ const CreatePostForm = ({ obj }) => {
 
       <Form.Group controlId="formGenres">
         <Form.Label>Genres</Form.Label>
-        {renderGenreCheckboxes()}
+        <div style={{
+          display: 'flex', flexDirection: 'column', flexWrap: 'wrap', maxHeight: '200px',
+        }}
+        >
+          {renderGenreCheckboxes()}
+        </div>
       </Form.Group>
 
       <Button variant="primary" onClick={handleFormSubmit}>

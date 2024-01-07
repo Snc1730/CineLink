@@ -81,11 +81,11 @@ const WatchlistPage = () => {
 
   return (
     <div>
-      <h1>Watchlist</h1>
+      <h1 className="text-center" style={{ paddingTop: '10px', paddingBottom: '10px' }}>Watchlist</h1>
       {watchlist.length === 0 ? (
         <p>No posts in watchlist</p>
       ) : (
-        <div>
+        <div className="text-center">
           <div className="d-flex flex-wrap justify-content-center">
             {/* Render User's Watchlist */}
             {watchlist.map((post) => (
@@ -97,10 +97,10 @@ const WatchlistPage = () => {
           {/* Display Recommendations */}
           {recommendations.length > 0 && (
             <div>
-              <h2>Recommended Movies</h2>
+              <h2 style={{ paddingBottom: '10px' }}>Movies You May Enjoy</h2>
               <div className="d-flex flex-wrap justify-content-center">
                 {recommendations.map((recommendedPost) => (
-                  <PostCard key={recommendedPost.id} post={recommendedPost} />
+                  <PostCard key={recommendedPost.id} post={recommendedPost} onDelete={deletePost} />
                   // Render the recommended movie using PostCard component
                 ))}
               </div>
