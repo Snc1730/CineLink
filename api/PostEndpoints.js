@@ -37,7 +37,21 @@ const getAllPost = async () => {
     }
 
     const data = await response.json();
-    return data;
+
+    // Sort the 'data' array by title in alphabetical order
+    const sortedData = data.sort((a, b) => {
+      const titleA = a.title.toLowerCase(); // Convert titles to lowercase for case-insensitive comparison
+      const titleB = b.title.toLowerCase();
+      if (titleA < titleB) {
+        return -1;
+      }
+      if (titleA > titleB) {
+        return 1;
+      }
+      return 0;
+    });
+
+    return sortedData; // Return the sorted data
   } catch (error) {
     throw new Error(`Error fetching post: ${error.message}`);
   }

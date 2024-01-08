@@ -47,6 +47,13 @@ body {
   align-items: center;
 }
 
+.post-card h3 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 18px;
+}
+
 .post-card button {
   font-family: 'Arial';
   font-size: 14px;
