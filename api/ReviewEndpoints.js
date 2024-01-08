@@ -43,6 +43,26 @@ const getReviewsByPostId = async (postId) => {
   }
 };
 
+const getAllRatings = async () => {
+  try {
+    const response = await fetch('https://localhost:7273/api/ratings', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error fetching ratings');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(`Error fetching ratings: ${error.message}`);
+  }
+};
+
 const updateReview = async (reviewId, updatedReviewData) => {
   try {
     const response = await fetch(`https://localhost:7273/api/review/${reviewId}`, {
@@ -85,6 +105,7 @@ const deleteReview = async (reviewId) => {
 export {
   createReview,
   getReviewsByPostId,
+  getAllRatings,
   updateReview,
   deleteReview,
 };

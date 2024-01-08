@@ -33,6 +33,9 @@ export default function NavBar() {
             <Link passHref href="/CreatePostPage">
               <Nav.Link className="nav-link">Add New Post</Nav.Link>
             </Link>
+            <Link passHref href="/topRatedPage">
+              <Nav.Link className="nav-link">Top Rated Films</Nav.Link>
+            </Link>
             <Link passHref href="/watchlist">
               <Nav.Link className="nav-link">Watchlist</Nav.Link>
             </Link>
