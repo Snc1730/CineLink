@@ -7,6 +7,7 @@ import {
   Nav,
   Button,
 } from 'react-bootstrap';
+import Image from 'next/image';
 import { signOut } from '../utils/auth';
 
 export default function NavBar() {
@@ -22,7 +23,14 @@ export default function NavBar() {
     >
       <Container>
         <Link passHref href="/">
-          <Navbar.Brand className="navbar-brand">CHANGE ME</Navbar.Brand>
+          <Navbar.Brand className="navbar-brand">
+            <Image
+              src="/images/CinelinkLogo.PNG"
+              alt="CineLink"
+              width={150}
+              height={50}
+            />
+          </Navbar.Brand>
         </Link>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">

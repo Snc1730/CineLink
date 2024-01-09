@@ -36,9 +36,16 @@ const ReviewForm = ({ initialReview, onSubmit, postid }) => {
     <form onSubmit={handleSubmit}>
       <textarea
         name="content"
-        placeholder="Add a comment"
+        placeholder="Add a review and rating!"
         value={reviewData.content}
         onChange={handleChange}
+        style={{
+          width: '70%',
+          minHeight: '70px',
+          borderRadius: '8px',
+          padding: '8px',
+          marginRight: '10px',
+        }}
       />
       <label htmlFor="rating">Rating:</label>
       <select
@@ -53,7 +60,13 @@ const ReviewForm = ({ initialReview, onSubmit, postid }) => {
           </option>
         ))}
       </select>
-      <button type="submit">Submit</button>
+      <button
+        type="submit"
+        style={{
+          borderRadius: '8px', padding: '5px', marginLeft: '10px', marginBottom: '10px',
+        }}
+      >Submit
+      </button>
     </form>
   );
 };
