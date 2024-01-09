@@ -81,6 +81,15 @@ function Home() {
     return isMatchingSearch;
   });
 
+  const updatePostsState = async () => {
+    try {
+      const postsData = await getAllPost();
+      setPosts(postsData);
+    } catch (error) {
+      console.error('Error fetching posts:', error.message);
+    }
+  };
+
   return (
     <div className="text-center">
       <div className="d-flex flex-column justify-content-center align-content-center" style={{ padding: '30px', maxWidth: '800px', margin: '0 auto' }}>
@@ -111,7 +120,7 @@ function Home() {
       </div>
       <div className="d-flex flex-wrap justify-content-center">
         {filteredPosts.map((post) => (
-          <PostCard key={post.id} post={post} onDelete={deletePost} initialUserId={userId} isWatchlistPage={false} />
+          <PostCard key={post.id} post={post} onDelete={deletePost} initialUserId={userId} isWatchlistPage={false} updatePostsState={updatePostsState} />
         ))}
       </div>
     </div>

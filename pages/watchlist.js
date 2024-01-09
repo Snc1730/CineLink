@@ -27,8 +27,6 @@ const WatchlistPage = () => {
       try {
         if (userId) {
           const watchlistData = await getWatchlistForUser(userId);
-          console.log('Watchlist data:', watchlistData);
-          console.log('Single watchlist item:', watchlistData[0]);
           setWatchlist(watchlistData);
 
           // Check if watchlistData has genres
@@ -79,6 +77,16 @@ const WatchlistPage = () => {
     fetchWatchlistAndRecommendations();
   }, [userId]);
 
+  const handleRemoveFromWatchlist = async (postId) => {
+    try {
+      await removeFromWatchlist(userId, postId);
+      const updatedWatchlist = watchlist.filter((post) => post.id !== postId);
+      setWatchlist(updatedWatchlist);
+    } catch (error) {
+      console.error('Error removing post from watchlist:', error);
+    }
+  };
+
   return (
     <div>
       <h1 className="text-center" style={{ paddingTop: '10px', paddingBottom: '10px' }}>Watchlist</h1>
@@ -89,7 +97,7 @@ const WatchlistPage = () => {
           <div className="d-flex flex-wrap justify-content-center">
             {/* Render User's Watchlist */}
             {watchlist.map((post) => (
-              <PostCard key={post.id} post={post} onDelete={deletePost} onRemove={removeFromWatchlist} initialUserId={userId} isWatchlistPage />
+              <PostCard key={post.id} post={post} onDelete={deletePost} onRemove={() => handleRemoveFromWatchlist(post.id)} initialUserId={userId} isWatchlistPage setWatchlist={setWatchlist} />
               // Assuming 'post' contains the necessary details to render in the PostCard
             ))}
           </div>
