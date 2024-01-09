@@ -84,21 +84,29 @@ function Home() {
   return (
     <div className="text-center">
       <div className="d-flex flex-column justify-content-center align-content-center" style={{ padding: '30px', maxWidth: '800px', margin: '0 auto' }}>
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={handleSearch}
-        />
-        <select
-          value={selectedGenre}
-          onChange={handleGenreChange}
-        >
-          <option value="">Filter by Genre</option>
-          {availableGenres.map((genre) => (
-            <option key={genre.id} value={genre.id}>{genre.name}</option>
-          ))}
-        </select>
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+          <button className="btn btn-outline-secondary" type="button">Search</button>
+        </div>
+        <div className="input-group mb-3">
+          <select
+            className="form-select"
+            value={selectedGenre}
+            onChange={handleGenreChange}
+          >
+            <option value="">Filter by Genre</option>
+            {availableGenres.map((genre) => (
+              <option key={genre.id} value={genre.id}>{genre.name}</option>
+            ))}
+          </select>
+          <button className="btn btn-outline-secondary" type="button">Apply</button>
+        </div>
         <h1>Hello {user.fbUser.displayName}!</h1>
       </div>
       <div className="d-flex flex-wrap justify-content-center">

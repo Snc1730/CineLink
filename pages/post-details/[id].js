@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { Button, ListGroup } from 'react-bootstrap';
 import {
   createReview,
   deleteReview,
@@ -11,6 +12,7 @@ import { getPostById } from '../../api/PostEndpoints';
 import { addToWatchlist, getGenresForPost } from '../../api/JoinTableEndpoints';
 import { checkUser } from '../../utils/auth';
 import { useAuth } from '../../utils/context/authContext';
+import StarRating from '../../components/StarRating';
 
 const PostDetailsPage = () => {
   const router = useRouter();
@@ -143,7 +145,7 @@ const PostDetailsPage = () => {
         {/* Confirmation message */}
         {showConfirmation && (
           <div className="confirmation">
-            <p>Post added to watchlist successfully!</p>
+            <p>Film added to watchlist!</p>
           </div>
         )}
       </div>
@@ -171,35 +173,41 @@ const PostDetailsPage = () => {
         />
 
         {/* Reviews Section */}
-        {reviews.slice(0).reverse().map((review) => (
-          <div key={review.id}>
-            <p>{review.content}</p>
-            <p>{review.rating}</p>
-            {myUser?.id === review.userId && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setEditingReviewId(review.id)}
-                >
+        <ListGroup style={{ backgroundColor: '#333' }}>
+          {reviews.slice(0).reverse().map((review) => (
+            <ListGroup.Item key={review.id} style={{ backgroundColor: '#111', color: 'inherit' }}>
+              <div className="d-flex w-100 justify-content-between">
+                <h5 className="mb-1">{user.fbUser.displayName}</h5>
+                <img
+                  src={user.fbUser.photoURL}
+                  alt="User Profile"
+                  style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+                />
+              </div>
+              <p className="mb-1">{review.content}</p>
+              {/* Star Rating component */}
+              <StarRating rating={review.rating} />
+              {/* Update background color of buttons to match the body color */}
+              {myUser?.id === review.userId && (
+              <div>
+                <Button variant="info" style={{ backgroundColor: 'inherit', border: 'none', color: 'inherit' }} onClick={() => setEditingReviewId(review.id)}>
                   Edit
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteReview(review.id)}
-                >
+                </Button>
+                <Button variant="danger" style={{ backgroundColor: 'inherit', border: 'none', color: 'inherit' }} onClick={() => handleDeleteReview(review.id)}>
                   Delete
-                </button>
-              </>
-            )}
-            {editingReviewId === review.id && (
-              <ReviewForm
-                postid={id}
-                initialReview={review}
-                onSubmit={(data) => handleUpdateReview(review.id, data)}
-              />
-            )}
-          </div>
-        ))}
+                </Button>
+              </div>
+              )}
+              {editingReviewId === review.id && (
+                <ReviewForm
+                  postid={id}
+                  initialReview={review}
+                  onSubmit={(data) => handleUpdateReview(review.id, data)}
+                />
+              )}
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
       </div>
     </div>
   );

@@ -63,21 +63,27 @@ function Top10Page() {
   }, []);
 
   return (
-    <div className="d-flex flex-wrap justify-content-center">
-      {topMovies.map((movie, index) => (
-        <div className="col-6" key={movie.id}>
-          <div className="top-movie-card">
-            <h3>{index + 1}</h3> {/* Display ranking number */}
-            <PostCard
-              key={movie.id}
-              post={movie}
-              onDelete={deletePost}
-              initialUserId={userId}
-              isWatchlistPage={false}
-            />
+    <div className="container">
+      <div className="row">
+        {topMovies.map((movie, index) => (
+          <div className="col-lg-6 col-xl-4 mb-4" key={movie.id}>
+            <div className="top-movie-card position-relative">
+              <PostCard
+                post={movie}
+                onDelete={deletePost}
+                initialUserId={userId}
+                isWatchlistPage={false}
+              />
+              <div
+                className="position-absolute bottom-0 start-50 translate-middle-x bg-dark py-2 px-3 rounded-pill"
+                style={{ zIndex: 1 }}
+              >
+                <h3 className="m-0">{index + 1}</h3>
+              </div>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
