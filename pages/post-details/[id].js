@@ -5,6 +5,7 @@ import {
   createReview,
   deleteReview,
   getReviewsByPostId,
+  getUserById,
   updateReview,
 } from '../../api/ReviewEndpoints';
 import ReviewForm from '../../components/ReviewForm';
@@ -63,7 +64,14 @@ const PostDetailsPage = () => {
     const fetchReviews = async () => {
       try {
         const fetchedReviews = await getReviewsByPostId(id);
-        setReviews(fetchedReviews);
+        const reviewsWithUserData = await Promise.all(
+          fetchedReviews.map(async (review) => {
+            const userData = await getUserById(review.userId);
+            console.log('User data:', userData);
+            return { ...review, userData };
+          }),
+        );
+        setReviews(reviewsWithUserData);
       } catch (error) {
         console.error('Error fetching reviews:', error);
       }
@@ -77,9 +85,20 @@ const PostDetailsPage = () => {
 
   const handleCreateReview = async (reviewData) => {
     try {
+      // Create the review
       await createReview(reviewData);
-      const fetchedReviews = await getReviewsByPostId(id);
-      setReviews(fetchedReviews);
+
+      // Fetch the newly added review and its user data
+      const newReviews = await getReviewsByPostId(id);
+      const reviewsWithUserData = await Promise.all(
+        newReviews.map(async (review) => {
+          const userData = await getUserById(review.userId);
+          return { ...review, userData };
+        }),
+      );
+
+      // Update the reviews state to include the new review with user data
+      setReviews(reviewsWithUserData);
     } catch (error) {
       console.error('Error adding review:', error);
     }
@@ -87,9 +106,20 @@ const PostDetailsPage = () => {
 
   const handleUpdateReview = async (reviewId, updatedReviewData) => {
     try {
+      // Update the review
       await updateReview(reviewId, updatedReviewData);
-      const fetchedReviews = await getReviewsByPostId(id);
-      setReviews(fetchedReviews);
+
+      // Fetch the updated reviews and their user data
+      const updatedReviews = await getReviewsByPostId(id);
+      const reviewsWithUserData = await Promise.all(
+        updatedReviews.map(async (review) => {
+          const userData = await getUserById(review.userId);
+          return { ...review, userData };
+        }),
+      );
+
+      // Update the reviews state with the updated data
+      setReviews(reviewsWithUserData);
       setEditingReviewId(null); // Exit editing mode
     } catch (error) {
       console.error('Error updating review:', error);
@@ -98,9 +128,20 @@ const PostDetailsPage = () => {
 
   const handleDeleteReview = async (reviewId) => {
     try {
+      // Delete the review
       await deleteReview(reviewId);
-      const fetchedReviews = await getReviewsByPostId(id);
-      setReviews(fetchedReviews);
+
+      // Fetch the updated reviews and their user data after deletion
+      const updatedReviews = await getReviewsByPostId(id);
+      const reviewsWithUserData = await Promise.all(
+        updatedReviews.map(async (review) => {
+          const userData = await getUserById(review.userId);
+          return { ...review, userData };
+        }),
+      );
+
+      // Update the reviews state with the updated data after deletion
+      setReviews(reviewsWithUserData);
     } catch (error) {
       console.error('Error deleting review:', error);
     }
@@ -176,13 +217,9 @@ const PostDetailsPage = () => {
         <ListGroup style={{ backgroundColor: '#333' }}>
           {reviews.slice(0).reverse().map((review) => (
             <ListGroup.Item key={review.id} style={{ backgroundColor: '#111', color: 'inherit' }}>
+              {/* Display user information */}
               <div className="d-flex w-100 justify-content-between">
-                <h5 className="mb-1">{user.fbUser.displayName}</h5>
-                <img
-                  src={user.fbUser.photoURL}
-                  alt="User Profile"
-                  style={{ width: '40px', height: '40px', borderRadius: '50%' }}
-                />
+                <h5 className="mb-1">{review.userData.name}</h5>
               </div>
               <p className="mb-1">{review.content}</p>
               {/* Star Rating component */}
@@ -199,11 +236,11 @@ const PostDetailsPage = () => {
               </div>
               )}
               {editingReviewId === review.id && (
-                <ReviewForm
-                  postid={id}
-                  initialReview={review}
-                  onSubmit={(data) => handleUpdateReview(review.id, data)}
-                />
+              <ReviewForm
+                postid={id}
+                initialReview={review}
+                onSubmit={(data) => handleUpdateReview(review.id, data)}
+              />
               )}
             </ListGroup.Item>
           ))}
