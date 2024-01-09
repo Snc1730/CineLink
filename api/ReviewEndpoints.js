@@ -102,10 +102,31 @@ const deleteReview = async (reviewId) => {
   }
 };
 
+const getUserById = async (userId) => {
+  try {
+    const response = await fetch(`https://localhost:7273/api/user/${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error fetching user');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(`Error fetching user: ${error.message}`);
+  }
+};
+
 export {
   createReview,
   getReviewsByPostId,
   getAllRatings,
   updateReview,
   deleteReview,
+  getUserById,
 };
