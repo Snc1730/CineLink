@@ -3,20 +3,20 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 const PostCard = ({
-  post, onDelete, onRemove, initialUserId, isWatchlistPage,
+  post, onDelete, onRemove, initialUserId, isWatchlistPage, updatePostsState, isTop10Page, setWatchlist,
 }) => {
   const [userId, setUserId] = useState(initialUserId);
   useEffect(() => {
     setUserId(initialUserId);
   }, [initialUserId]);
-  console.log('init:', initialUserId);
+
   const handleRemoveFromWatchlist = () => {
     const confirmed = window.confirm('Are you sure you want to remove this post from your watchlist?');
 
     if (confirmed) {
       onRemove(userId, post.id)
         .then(() => {
-          window.location.reload(); // Or update the watchlist state after removal
+          setWatchlist((prevWatchlist) => prevWatchlist.filter((item) => item.id !== post.id));
         })
         .catch((error) => {
           console.error('Error removing post from watchlist:', error);
@@ -30,7 +30,7 @@ const PostCard = ({
     if (confirmed) {
       onDelete(post.id)
         .then(() => {
-          window.location.reload();
+          updatePostsState();
         })
         .catch((error) => {
           console.error('Error deleting post:', error);
@@ -45,7 +45,7 @@ const PostCard = ({
       <Link href={`/post-details/${post.id}`} passHref>
         <button type="button">View Details</button>
       </Link>
-      {userId === post.userId && ( // Check if the logged-in user is the creator of the post
+      {userId === post.userId && !isWatchlistPage && !isTop10Page && ( // Check if the logged-in user is the creator of the post
         <>
           <Link href={`/edit-post/${post.id}`} passHref>
             <button type="button">Edit Post</button>
@@ -75,6 +75,9 @@ PostCard.propTypes = {
   onRemove: PropTypes.func,
   initialUserId: PropTypes.number,
   isWatchlistPage: PropTypes.bool,
+  updatePostsState: PropTypes.func,
+  isTop10Page: PropTypes.bool,
+  setWatchlist: PropTypes.func,
 };
 
 PostCard.defaultProps = {
@@ -82,6 +85,9 @@ PostCard.defaultProps = {
   initialUserId: null, // Default userId value (or any appropriate default)
   onDelete: null,
   isWatchlistPage: null,
+  updatePostsState: () => {},
+  isTop10Page: null,
+  setWatchlist: () => {},
 };
 
 export default PostCard;

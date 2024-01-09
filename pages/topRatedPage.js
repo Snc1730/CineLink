@@ -73,6 +73,7 @@ function Top10Page() {
                 onDelete={deletePost}
                 initialUserId={userId}
                 isWatchlistPage={false}
+                isTop10Page
               />
               <div
                 className="position-absolute bottom-0 start-50 translate-middle-x bg-dark py-2 px-3 rounded-pill"
